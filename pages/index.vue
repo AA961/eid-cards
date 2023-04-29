@@ -57,7 +57,7 @@
                 <div class="save-and-share">
                     <button @click="saveCardAsImage" class="save-button button secondry">Save as Image</button>
                     <!-- <social-sharing network="whatsapp" :url="null" :title="null" :description="null" class="social-sharing"> -->
-                    <button class="share-button button primary" @click="sendOnWA">Share via WhatsApp</button>
+                    <button class="share-button button primary" @click="openImage">Share via WhatsApp</button>
                     <!-- </social-sharing> -->
                 </div>
 
@@ -105,9 +105,23 @@
 
 <script  setup>
 import html2canvas from 'html2canvas';
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
 let toName = ref("[Name]");
 let fromName = ref("[Your Name]");
 let cardHeading = ref("Have A Blessed Eid");
+
+
+if (route.query.to && route.query.from) {
+    // set toName and fromName from query params
+     toName.value = route.query.to
+     fromName.value = route.query.from
+
+    // do something with toName and fromName, e.g. pass them to a component
+}
 
 useSeoMeta(() => ({
     title: 'Eid Card Designer | Create Beautiful Greeting Cards for Eid',
@@ -212,7 +226,7 @@ const saveCardAsImage = () => {
     });
 }
 
-const sendOnWA = async () => {
+const sendOnWA = () => {
 
     const cardPreview = document.querySelector('.card-wrapper');
     html2canvas(cardPreview).then(canvas => {
@@ -225,6 +239,18 @@ const sendOnWA = async () => {
         window.location.href = whatsappUrl;
     });
 }
+
+const openImage = () => {
+    const cardPreview = document.querySelector('.card-wrapper');
+    html2canvas(cardPreview).then(canvas => {
+        const image = canvas.toDataURL('image/png');
+        const imgElement = document.createElement('img');
+        imgElement.src = image;
+        const newWindow = window.open();
+        newWindow.document.write(imgElement.outerHTML);
+    });
+};
+
 
 
 </script>
