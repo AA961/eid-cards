@@ -3,7 +3,7 @@
         <div class="container">
             <h2 class="preview-heading">Card Preview</h2>
             <div class="card-wrapper">
-                <div class="card-container" :style="{ backgroundColor: selectedColor }">
+                <div class="card-container" :style="{ backgroundColor: selectedColor.bg }">
                     <div class="left-side">
 
                         <div class="edit-to-name">
@@ -11,7 +11,8 @@
                                 <input type="text" v-model="toName">
                                 <button @click="edit.isEditToName = !edit.isEditToName">Save</button>
                             </div>
-                            <h3 v-else class="to" @click="edit.isEditToName = !edit.isEditToName">To {{ toName }} </h3>
+                            <h3 v-else class="to" :style="{ color: selectedColor.primary }"
+                                @click="edit.isEditToName = !edit.isEditToName">To {{ toName }} </h3>
                         </div>
 
 
@@ -21,7 +22,8 @@
                                 <button @click="edit.isEditCardHeading = !edit.isEditCardHeading">Save</button>
                             </div>
 
-                            <h1 v-else @click="edit.isEditCardHeading = !edit.isEditCardHeading">{{ cardHeading }}</h1>
+                            <h1 :style="{ color: selectedColor.secondary }" v-else
+                                @click="edit.isEditCardHeading = !edit.isEditCardHeading">{{ cardHeading }}</h1>
                         </div>
 
 
@@ -30,7 +32,8 @@
                                 <textarea name="" id="" cols="30" rows="3" v-model="selectedQuotation"></textarea>
                                 <button @click="edit.isEditQoute = !edit.isEditQoute">Save</button>
                             </div>
-                            <p v-else @click="edit.isEditQoute = !edit.isEditQoute"> {{ selectedQuotation }}</p>
+                            <p :style="{ color: selectedColor.primary }" v-else
+                                @click="edit.isEditQoute = !edit.isEditQoute"> {{ selectedQuotation }}</p>
                         </div>
 
                         <div class="edit-from">
@@ -38,7 +41,8 @@
                                 <input type="text" v-model="fromName">
                                 <button @click="edit.isEditFromName = !edit.isEditFromName">Save</button>
                             </div>
-                            <h3 class="from" v-else @click="edit.isEditFromName = !edit.isEditFromName">From {{ fromName }}
+                            <h3 class="from" :style="{ color: selectedColor.primary }" v-else
+                                @click="edit.isEditFromName = !edit.isEditFromName">From {{ fromName }}
                             </h3>
                         </div>
                     </div>
@@ -74,8 +78,8 @@
                     <div class="color-picker">
                         <h3 class="color-picker__title">Color Palette</h3>
                         <div class="color-swatches">
-                            <div v-for="color in colorPalette" :key="color" class="color-swatch"
-                                :style="{ backgroundColor: color }" @click="selectColor(color)"></div>
+                            <div v-for="color in palettes" :key="color" class="color-swatch"
+                                :style="{ backgroundColor: color.bg }" @click="selectColor(color)"></div>
                         </div>
                     </div>
                     <div class="quotation-picker">
@@ -100,7 +104,6 @@
 
 <script  setup>
 import html2canvas from 'html2canvas';
-// import VueSocials from 'vue-socials'
 let toName = ref("[Name]");
 let fromName = ref("[Your Name]");
 let cardHeading = ref("Have A Blessed Eid");
@@ -123,7 +126,52 @@ let edit = reactive({
 
 
 
-const colorPalette = ['#0d3b54', '#FFE5B4', '#F8DE7E', '#90EE90', '#ADD8E6', '#F0E68C'];
+
+const palettes = [
+    {
+        bg: '#0d3b54',
+        primary: '#95c3db',
+        secondary: '#f5d06f',
+        accent: '#BFAE9D',
+    },
+    {
+        bg: '#131521',
+        primary: '#F9E2C2',
+        secondary: '#F6D196',
+        accent: '#BFAE9D',
+    },
+    {
+        bg: '#231E1C',
+        primary: '#F3E3C2',
+        secondary: '#F9DD9D',
+        accent: '#AA8D6B',
+    },
+    {
+        bg: '#201E1F',
+        primary: '#D3C3A9',
+        secondary: '#E3D2B2',
+        accent: '#F5D6B4',
+    },
+    {
+        bg: '#1A1F22',
+        primary: '#F2D5A6',
+        secondary: '#F8DDBA',
+        accent: '#AF9B86',
+    },
+    {
+        bg: '#2C2926',
+        primary: '#F1E1C3',
+        secondary: '#F9D79A',
+        accent: '#A29C8E',
+    },
+    {
+        bg: '#23272A',
+        primary: '#E9D7B8',
+        secondary: '#F1D69F',
+        accent: '#8E7460',
+    },
+];
+
 
 const quotes = [
     'May Allah’s blessings be with you today and always.',
@@ -140,7 +188,7 @@ const quotes = [
 const selectedQuotation = ref(quotes[0]);
 const selectQuotation = (quotation) => selectedQuotation.value = quotation;
 
-const selectedColor = ref(colorPalette[0]);
+const selectedColor = ref(palettes[0]);
 const selectColor = (color) => selectedColor.value = color;
 
 const saveCardAsImage = () => {
@@ -154,22 +202,10 @@ const saveCardAsImage = () => {
     });
 }
 
-const sendOnWA = () => {
-    const cardPreview = document.querySelector('.card-wrapper');
-    html2canvas(cardPreview).then(canvas => {
-        const image = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.download = 'eid-card.png';
-        link.href = image;
-
-        // Create WhatsApp share link
-        const whatsappUrl = `whatsapp://send?text=${encodeURIComponent('Check out my Eid card!')}&image=${encodeURIComponent(image)}`;
-        const whatsappLink = document.createElement('a');
-        whatsappLink.href = whatsappUrl;
-
-        // Trigger WhatsApp share link click event
-        whatsappLink.click();
-    });
+const sendOnWA = async () => {
+    const image = await saveCardAsImage();
+    const whatsappUrl = `whatsapp://send?text=${encodeURIComponent('Check out my Eid card!')}&image=${encodeURIComponent(image)}`;
+    window.location.href = whatsappUrl;
 }
 
 
@@ -219,29 +255,25 @@ const sendOnWA = () => {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
             .left-side {
-                
+
 
                 .to {
-                    color: #95c3db;
                     font-family: 'Great Vibes', cursive;
                     font-size: 2rem;
                     margin: 2rem auto;
                 }
 
                 h1 {
-                    color: #f5d06f;
                     font-size: 3rem;
                     font-family: 'Lobster Two', cursive;
                 }
 
                 .from {
                     font-family: 'Lobster Two', cursive;
-                    color: #95c3db;
                     text-align: end;
                 }
 
                 .qutation {
-                    color: #95c3db;
                     font-family: 'Great Vibes', cursive !important;
                     font-size: 2rem;
                     margin: 2rem auto;
