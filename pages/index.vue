@@ -57,7 +57,9 @@
                 <div class="save-and-share">
                     <button @click="saveCardAsImage" class="save-button button secondry">Save as Image</button>
                     <!-- <social-sharing network="whatsapp" :url="null" :title="null" :description="null" class="social-sharing"> -->
-                    <button class="share-button button primary" @click="openImage">Share via WhatsApp</button>
+                    <button class="share-button button primary"
+                        @click="sendWhatsappMessage(`https://eidcards.netlify.app/?to=${toName}&from=${fromName}`)">Share
+                        via WhatsApp</button>
                     <!-- </social-sharing> -->
                 </div>
 
@@ -117,8 +119,8 @@ let cardHeading = ref("Have A Blessed Eid");
 
 if (route.query.to && route.query.from) {
     // set toName and fromName from query params
-     toName.value = route.query.to
-     fromName.value = route.query.from
+    toName.value = route.query.to
+    fromName.value = route.query.from
 
     // do something with toName and fromName, e.g. pass them to a component
 }
@@ -225,6 +227,12 @@ const saveCardAsImage = () => {
         link.click();
     });
 }
+
+ const sendWhatsappMessage = (message) => {
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `whatsapp://send?text=${encodedMessage}`;
+    window.open(whatsappUrl);
+};
 
 const sendOnWA = () => {
 
