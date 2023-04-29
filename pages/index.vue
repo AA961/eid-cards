@@ -53,7 +53,7 @@
                 <div class="save-and-share">
                     <button @click="saveCardAsImage" class="save-button button secondry">Save as Image</button>
                     <!-- <social-sharing network="whatsapp" :url="null" :title="null" :description="null" class="social-sharing"> -->
-                    <button class="share-button button primary">Share via WhatsApp</button>
+                    <button class="share-button button primary" @click="sendOnWA">Share via WhatsApp</button>
                     <!-- </social-sharing> -->
                 </div>
 
@@ -154,6 +154,25 @@ const saveCardAsImage = () => {
     });
 }
 
+const sendOnWA = () => {
+    const cardPreview = document.querySelector('.card-wrapper');
+    html2canvas(cardPreview).then(canvas => {
+        const image = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = 'eid-card.png';
+        link.href = image;
+
+        // Create WhatsApp share link
+        const whatsappUrl = `whatsapp://send?text=${encodeURIComponent('Check out my Eid card!')}&image=${encodeURIComponent(image)}`;
+        const whatsappLink = document.createElement('a');
+        whatsappLink.href = whatsappUrl;
+
+        // Trigger WhatsApp share link click event
+        whatsappLink.click();
+    });
+}
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -182,7 +201,6 @@ const saveCardAsImage = () => {
 
         position: relative;
         margin: 0rem auto;
-        // padding: 1rem;
 
         h2 {
             text-align: center;
@@ -201,11 +219,7 @@ const saveCardAsImage = () => {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
             .left-side {
-                // display: flex;
-                // justify-content: center;
-                // align-items: center;
-                // flex-direction: column;
-                // flex: 1;
+                
 
                 .to {
                     color: #95c3db;
