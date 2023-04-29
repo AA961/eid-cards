@@ -53,7 +53,7 @@
                 <div class="save-and-share">
                     <button @click="saveCardAsImage" class="save-button button secondry">Save as Image</button>
                     <!-- <social-sharing network="whatsapp" :url="null" :title="null" :description="null" class="social-sharing"> -->
-                        <button class="share-button button primary">Share via WhatsApp</button>
+                    <button class="share-button button primary">Share via WhatsApp</button>
                     <!-- </social-sharing> -->
                 </div>
 
@@ -105,7 +105,14 @@ let toName = ref("[Name]");
 let fromName = ref("[Your Name]");
 let cardHeading = ref("Have A Blessed Eid");
 
-
+useSeoMeta(() => ({
+    title: 'Eid Card Designer | Create Beautiful Greeting Cards for Eid',
+    description: 'Celebrate the joyous occasion of Eid with beautiful and personalized greeting cards. Choose from a variety of stunning templates to create your own unique design. Send your heartfelt wishes to loved ones near and far with Eid Card Designer.',
+    ogTitle: 'Eid Card Designer | Create Beautiful Greeting Cards for Eid',
+    ogDescription: 'Celebrate the joyous occasion of Eid with beautiful and personalized greeting cards. Choose from a variety of stunning templates to create your own unique design. Send your heartfelt wishes to loved ones near and far with Eid Card Designer.',
+    //   ogImage: 'https://example.com/images/og-image.jpg',
+    //   twitterCard: 'summary_large_image'
+}));
 
 let edit = reactive({
     isEditCardHeading: false,
