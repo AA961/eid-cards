@@ -1,116 +1,9 @@
-<template>
-    <section>
-        <div class="container">
-            <h2 class="preview-heading">Card Preview</h2>
-            <div class="card-wrapper">
-                <div class="card-container" :style="{ backgroundColor: selectedColor.bg }">
-                    <div class="left-side">
-
-                        <div class="edit-to-name">
-                            <div class="edit" v-if="edit.isEditToName">
-                                <input type="text" v-model="toName">
-                                <button @click="edit.isEditToName = !edit.isEditToName">Save</button>
-                            </div>
-                            <h3 v-else class="to" :style="{ color: selectedColor.primary }"
-                                @click="edit.isEditToName = !edit.isEditToName">To {{ toName }} </h3>
-                        </div>
-
-
-                        <div class="edit-card-heading">
-                            <div class="edit" v-if="edit.isEditCardHeading">
-                                <input type="text" v-model="cardHeading">
-                                <button @click="edit.isEditCardHeading = !edit.isEditCardHeading">Save</button>
-                            </div>
-
-                            <h1 :style="{ color: selectedColor.secondary }" v-else
-                                @click="edit.isEditCardHeading = !edit.isEditCardHeading">{{ cardHeading }}</h1>
-                        </div>
-
-
-                        <div class="edit-qutation qutation">
-                            <div class="edit" v-if="edit.isEditQoute">
-                                <textarea name="" id="" cols="30" rows="3" v-model="selectedQuotation"></textarea>
-                                <button @click="edit.isEditQoute = !edit.isEditQoute">Save</button>
-                            </div>
-                            <p :style="{ color: selectedColor.primary }" v-else
-                                @click="edit.isEditQoute = !edit.isEditQoute"> {{ selectedQuotation }}</p>
-                        </div>
-
-                        <div class="edit-from">
-                            <div class="edit" v-if="edit.isEditFromName">
-                                <input type="text" v-model="fromName">
-                                <button @click="edit.isEditFromName = !edit.isEditFromName">Save</button>
-                            </div>
-                            <h3 class="from" :style="{ color: selectedColor.primary }" v-else
-                                @click="edit.isEditFromName = !edit.isEditFromName">From {{ fromName }}
-                            </h3>
-                        </div>
-                    </div>
-                    <div class="img">
-                        <img src="@/assets/imgs/taj-mahal.png" alt="">
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="control-area">
-                <div class="save-and-share">
-                    <button @click="saveCardAsImage" class="save-button button secondry">Save as Image</button>
-                    <!-- <social-sharing network="whatsapp" :url="null" :title="null" :description="null" class="social-sharing"> -->
-                    <button class="share-button button primary"
-                        @click="sendWhatsappMessage(`https://eidcards.netlify.app/?to=${toName}&from=${fromName}`)">Share
-                        via WhatsApp</button>
-                    <!-- </social-sharing> -->
-                </div>
-
-                <div class="card-controls">
-
-                    <div class="name-inputs">
-                        <h3 class="name-inputs__title">To and From</h3>
-                        <div class="input-group">
-                            <label for="fromName" class="input-label">From:</label>
-                            <input type="text" id="fromName" v-model="fromName" class="input-field">
-                        </div>
-                        <div class="input-group">
-                            <label for="toName" class="input-label">To:</label>
-                            <input type="text" id="toName" v-model="toName" class="input-field">
-                        </div>
-                    </div>
-
-                    <div class="color-picker">
-                        <h3 class="color-picker__title">Color Palette</h3>
-                        <div class="color-swatches">
-                            <div v-for="color in palettes" :key="color" class="color-swatch"
-                                :style="{ backgroundColor: color.bg }" @click="selectColor(color)"></div>
-                        </div>
-                    </div>
-                    <div class="quotation-picker">
-                        <h3 class="quotation-picker__title">Quotations</h3>
-                        <p>Click to choose.</p>
-                        <div class="quotation-items">
-                            <ul>
-                                <li v-for="quotation in quotes" :key="quotation" class="quotation-item"
-                                    :class="{ selected: quotation === selectedQuotation }"
-                                    @click="selectQuotation(quotation)">
-                                    {{
-                                        quotation }}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-</template>
-
 <script  setup>
 import html2canvas from 'html2canvas';
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
-const router = useRouter()
+// const router = useRouter()
 
 let toName = ref("[Name]");
 let fromName = ref("[Your Name]");
@@ -122,8 +15,15 @@ if (route.query.to && route.query.from) {
     toName.value = route.query.to
     fromName.value = route.query.from
 
+
     // do something with toName and fromName, e.g. pass them to a component
 }
+
+const sendWhatsappMessage = (message) => {
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `whatsapp://send?text=${encodedMessage}`;
+    window.open(whatsappUrl);
+};
 
 useSeoMeta(() => ({
     title: 'Eid Card Designer | Create Beautiful Greeting Cards for Eid',
@@ -218,6 +118,10 @@ const selectedColor = ref(palettes[0]);
 const selectColor = (color) => selectedColor.value = color;
 
 const saveCardAsImage = () => {
+    //  showBranding.value = false
+    const branding = document.querySelector('.branding');
+    branding.classList.remove("hide")
+
     const cardPreview = document.querySelector('.card-wrapper');
     html2canvas(cardPreview).then(canvas => {
         const image = canvas.toDataURL('image/png');
@@ -225,14 +129,15 @@ const saveCardAsImage = () => {
         link.download = 'eid-card.png';
         link.href = image;
         link.click();
+        showBranding.value = true
+        
     });
+    
+    branding.classList.add("hide")
+
 }
 
- const sendWhatsappMessage = (message) => {
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `whatsapp://send?text=${encodedMessage}`;
-    window.open(whatsappUrl);
-};
+
 
 const sendOnWA = () => {
 
@@ -262,8 +167,129 @@ const openImage = () => {
 
 
 </script>
+<template>
+    <section>
+        <div class="container">
+            <h2 class="preview-heading">Card Preview</h2>
+            <div class="card-wrapper">
+                <div class="card-container" :style="{ backgroundColor: selectedColor.bg }">
+                    <div class="left-side">
+
+                        <div class="edit-to-name">
+                            <div class="edit" v-if="edit.isEditToName">
+                                <input type="text" v-model="toName">
+                                <button @click="edit.isEditToName = !edit.isEditToName">Save</button>
+                            </div>
+                            <h3 v-else class="to" :style="{ color: selectedColor.primary }"
+                                @click="edit.isEditToName = !edit.isEditToName">To {{ toName }} </h3>
+                        </div>
+
+
+                        <div class="edit-card-heading">
+                            <div class="edit" v-if="edit.isEditCardHeading">
+                                <input type="text" v-model="cardHeading">
+                                <button @click="edit.isEditCardHeading = !edit.isEditCardHeading">Save</button>
+                            </div>
+
+                            <h1 :style="{ color: selectedColor.secondary }" v-else
+                                @click="edit.isEditCardHeading = !edit.isEditCardHeading">{{ cardHeading }}</h1>
+                        </div>
+
+
+                        <div class="edit-qutation qutation">
+                            <div class="edit" v-if="edit.isEditQoute">
+                                <textarea name="" id="" cols="30" rows="3" v-model="selectedQuotation"></textarea>
+                                <button @click="edit.isEditQoute = !edit.isEditQoute">Save</button>
+                            </div>
+                            <p :style="{ color: selectedColor.primary }" v-else
+                                @click="edit.isEditQoute = !edit.isEditQoute"> {{ selectedQuotation }}</p>
+                        </div>
+
+                        <div class="edit-from">
+                            <div class="edit" v-if="edit.isEditFromName">
+                                <input type="text" v-model="fromName">
+                                <button @click="edit.isEditFromName = !edit.isEditFromName">Save</button>
+                            </div>
+                            <h3 class="from" :style="{ color: selectedColor.primary }" v-else
+                                @click="edit.isEditFromName = !edit.isEditFromName">From {{ fromName }}
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="img">
+                        <img src="@/assets/imgs/taj-mahal.png" alt="">
+                    </div>
+
+                    <div class="branding hide">
+                        <h4>eidcards.netlify.app</h4>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="control-area">
+                <div class="save-and-share">
+                    <button @click="saveCardAsImage" class="save-button button secondry">Save as Image</button>
+                    <button class="share-button button primary"
+                        @click="sendWhatsappMessage(`https://eidcards.netlify.app/?to=${toName}&from=${fromName}`)">Share
+                        via WhatsApp</button>
+                </div>
+
+                <div class="card-controls">
+
+                    <div class="name-inputs">
+                        <h3 class="name-inputs__title">To and From</h3>
+                        <div class="input-group">
+                            <label for="fromName" class="input-label">From:</label>
+                            <input type="text" id="fromName" v-model="fromName" class="input-field">
+                        </div>
+                        <div class="input-group">
+                            <label for="toName" class="input-label">To:</label>
+                            <input type="text" id="toName" v-model="toName" class="input-field">
+                        </div>
+                    </div>
+
+                    <div class="color-picker">
+                        <h3 class="color-picker__title">Color Palette</h3>
+                        <div class="color-swatches">
+                            <div v-for="color in palettes" :key="color" class="color-swatch"
+                                :style="{ backgroundColor: color.bg }" @click="selectColor(color)"></div>
+                        </div>
+                    </div>
+                    <div class="quotation-picker">
+                        <h3 class="quotation-picker__title">Quotations</h3>
+                        <p>Click to choose.</p>
+                        <div class="quotation-items">
+                            <ul>
+                                <li v-for="quotation in quotes" :key="quotation" class="quotation-item"
+                                    :class="{ selected: quotation === selectedQuotation }"
+                                    @click="selectQuotation(quotation)">
+                                    {{
+                                        quotation }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</template>
+
 
 <style lang="scss" scoped>
+.branding {
+    position: absolute;
+    bottom: 1%;
+    font-family: 'Poppins', sans-serif;
+
+    // font-size: 5rem;
+}
+
+.hide {
+    display: none;
+}
+
 .container {
     display: flex;
     justify-content: center;
@@ -289,6 +315,7 @@ const openImage = () => {
 
         position: relative;
         margin: 0rem auto;
+        padding-bottom: 1rem;
 
         h2 {
             text-align: center;
@@ -305,6 +332,8 @@ const openImage = () => {
             flex-wrap: nowrap;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+            // position: relative;
 
             .left-side {
 
