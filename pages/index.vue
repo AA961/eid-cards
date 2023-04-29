@@ -84,6 +84,7 @@
                     </div>
                     <div class="quotation-picker">
                         <h3 class="quotation-picker__title">Quotations</h3>
+                        <p>Click to choose.</p>
                         <div class="quotation-items">
                             <ul>
                                 <li v-for="quotation in quotes" :key="quotation" class="quotation-item"
@@ -116,6 +117,15 @@ useSeoMeta(() => ({
     //   ogImage: 'https://example.com/images/og-image.jpg',
     //   twitterCard: 'summary_large_image'
 }));
+
+useHead({
+    meta: [
+        {
+            name: 'viewport',
+            content: 'width=1024'
+        }
+    ]
+})
 
 let edit = reactive({
     isEditCardHeading: false,
@@ -203,9 +213,17 @@ const saveCardAsImage = () => {
 }
 
 const sendOnWA = async () => {
-    const image = await saveCardAsImage();
-    const whatsappUrl = `whatsapp://send?text=${encodeURIComponent('Check out my Eid card!')}&image=${encodeURIComponent(image)}`;
-    window.location.href = whatsappUrl;
+
+    const cardPreview = document.querySelector('.card-wrapper');
+    html2canvas(cardPreview).then(canvas => {
+        const image = canvas.toDataURL('image/png');
+        // const link = document.createElement('a');
+        // link.download = 'eid-card.png';
+        // link.href = image;
+        // link.click();
+        const whatsappUrl = `whatsapp://send?text=${encodeURIComponent('Check out my Eid card!')}&image=${encodeURIComponent(image)}`;
+        window.location.href = whatsappUrl;
+    });
 }
 
 
@@ -294,6 +312,7 @@ const sendOnWA = async () => {
 
 .control-area {
     font-family: 'Poppins', sans-serif;
+    padding: 2rem;
 
 }
 
@@ -313,7 +332,7 @@ const sendOnWA = async () => {
 .color-picker__title,
 .quotation-picker__title,
 .name-inputs__title {
-    font-size: 18px;
+    font-size: 32px;
     margin: 0 0 10px;
 }
 
@@ -325,8 +344,9 @@ const sendOnWA = async () => {
 .quotation-items {
     ul {
         li {
-            margin: 1rem auto;
+            margin: 2rem auto;
             cursor: pointer;
+            list-style-type: none;
         }
     }
 }
