@@ -12,5 +12,17 @@
   box-sizing: border-box;
   // font-family: 'Poppins', sans-serif;
 }
+
+.mtb-1{
+  margin: 1rem auto;
+}
+
+.mtb-2{
+  margin: 1rem auto;
+}
+
+.mtb-3{
+  margin: 3rem auto;
+}
 </style>
 

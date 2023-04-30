@@ -2,7 +2,8 @@
 import html2canvas from 'html2canvas';
 import { useRoute, useRouter } from 'vue-router'
 
-const route = useRoute()
+const route = useRoute();
+let visibleCardOnly = ref(false)
 // const router = useRouter()
 
 let toName = ref("[Name]");
@@ -14,6 +15,7 @@ if (route.query.to && route.query.from) {
     // set toName and fromName from query params
     toName.value = route.query.to
     fromName.value = route.query.from
+    visibleCardOnly.value = true
 
 
     // do something with toName and fromName, e.g. pass them to a component
@@ -38,7 +40,7 @@ useHead({
     meta: [
         {
             name: 'viewport',
-            content: 'width=1024'
+            content: 'width=780'
         }
     ]
 })
@@ -117,6 +119,14 @@ const selectQuotation = (quotation) => selectedQuotation.value = quotation;
 const selectedColor = ref(palettes[0]);
 const selectColor = (color) => selectedColor.value = color;
 
+function createYourCard() {
+    fromName.value = toName.value
+    toName.value = "[Name]";
+    visibleCardOnly.value = false;
+    selectedColor.value = palettes[1];
+    selectedQuotation.value = quotes[quotes.length - 2];
+}
+
 const saveCardAsImage = () => {
     //  showBranding.value = false
     const branding = document.querySelector('.branding');
@@ -130,9 +140,9 @@ const saveCardAsImage = () => {
         link.href = image;
         link.click();
         showBranding.value = true
-        
+
     });
-    
+
     branding.classList.add("hide")
 
 }
@@ -170,7 +180,7 @@ const openImage = () => {
 <template>
     <section>
         <div class="container">
-            <h2 class="preview-heading">Card Preview</h2>
+            <h2 class="preview-heading" v-show="!visibleCardOnly">Card Preview</h2>
             <div class="card-wrapper">
                 <div class="card-container" :style="{ backgroundColor: selectedColor.bg }">
                     <div class="left-side">
@@ -226,9 +236,13 @@ const openImage = () => {
 
             </div>
 
-            <div class="control-area">
+            <div class="create-your .mtb-3" v-if="visibleCardOnly">
+                <button @click="createYourCard" class="button secondary .mtb-3">Create Your Card</button>
+            </div>
+
+            <div class="control-area" v-show="!visibleCardOnly">
                 <div class="save-and-share">
-                    <button @click="saveCardAsImage" class="save-button button secondry">Save as Image</button>
+                    <button @click="saveCardAsImage" class="save-button button secondary">Save as Image</button>
                     <button class="share-button button primary"
                         @click="sendWhatsappMessage(`https://eidcards.netlify.app/?to=${toName}&from=${fromName}`)">Share
                         via WhatsApp</button>
@@ -283,7 +297,6 @@ const openImage = () => {
     bottom: 1%;
     font-family: 'Poppins', sans-serif;
 
-    // font-size: 5rem;
 }
 
 .hide {
@@ -333,7 +346,6 @@ const openImage = () => {
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
-            // position: relative;
 
             .left-side {
 
@@ -356,7 +368,7 @@ const openImage = () => {
 
                 .qutation {
                     font-family: 'Great Vibes', cursive !important;
-                    font-size: 2rem;
+                    font-size: 1.6rem;
                     margin: 2rem auto;
                 }
             }
@@ -391,45 +403,80 @@ const openImage = () => {
     flex-direction: column;
     padding: 2rem;
 }
+.color-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+}
 
-.color-picker__title,
-.quotation-picker__title,
-.name-inputs__title {
-    font-size: 32px;
-    margin: 0 0 10px;
+.color-picker__title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .color-swatches {
     display: flex;
-    margin: 1rem auto;
-}
-
-.quotation-items {
-    ul {
-        li {
-            margin: 2rem auto;
-            cursor: pointer;
-            list-style-type: none;
-        }
-    }
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .color-swatch {
-    width: calc(20% - 10px);
-    height: 50px;
-    margin: 5px;
-    border-radius: 5px;
+    width: 60px;
+    height: 60px;
+    margin: 10px;
     cursor: pointer;
-    display: flex;
+    border-radius: 50%;
+    transition: transform 0.2s ease-in-out;
 }
 
-.quotation-item:hover,
 .color-swatch:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+}
+
+.quotation-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.quotation-picker__title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.quotation-items {
+    margin-top: 20px;
+}
+
+.quotation-items ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.quotation-item {
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.quotation-item:hover {
+    background-color: #f2f2f2;
 }
 
 .quotation-item.selected {
-    background-color: #f8f8f8;
+    background-color: #1e88e5;
+    color: #fff;
 }
 
 .input-group {
