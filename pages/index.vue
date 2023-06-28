@@ -8,7 +8,7 @@ let visibleCardOnly = ref(false)
 
 let toName = ref("[Name]");
 let fromName = ref("[Your Name]");
-let cardHeading = ref("Have A Blessed Eid");
+let cardHeading = ref("Have A Blessed Eid!");
 
 
 if (route.query.to && route.query.from) {
@@ -101,19 +101,37 @@ const palettes = [
 ];
 
 
-const quotes = [
-    'May Allah’s blessings be with you today and always.',
-    'May this special day bring peace, happiness and prosperity to everyone. Eid Mubarak!',
-    'Eid is the time for sharing what we have with others. Have a wonderful Eid.',
-    'May the blessings of Allah fill your life with happiness and open all the doors of success now and always. Eid Mubarak!',
-    'May Allah flood your life with happiness on this occasion, your heart with love, your soul with spiritual, your mind with wisdom, wishing you a very Happy Eid.',
-    'Eid Mubarak to you and your family. May the Almighty accept your prayers and bless you with the rewards of Ramadan.',
-    'May Allah forgive all your sins and accept your sacrifice and put ease to all your suffering! Eid ul Adha Mubarak.',
-    'May Allah bless you with all these and more on Eid al-Fitr and always. Eid Mubarak!',
-    "May Allah's blessings be showered on you on this Eid al-Fitr!",
-    "Eid Mubarak! May Allah's blessings be with you today and always.",
+const eidUlFitarQuotes = [
+    "Eid Mubarak! May your day be filled with joy and happiness.",
+    "May the blessings of Eid fill your life with happiness and prosperity.",
+    "Eid is a time to celebrate with family and friends. May you have a joyous Eid!",
+    "May the spirit of Eid fill your heart with love and peace.",
+    "Eid is a time to reflect on the blessings of the past year and to look forward to the year ahead.",
+    "May the light of Eid brighten your path and lead you to success.",
+    "Eid is a time to forgive and forget. May you have a peaceful and joyous Eid!",
+    "Eid is a time to share and care. May you have a happy and prosperous Eid!",
+    "Eid Mubarak! May your day be filled with laughter and smiles.",
+    "Eid is a time to be grateful for all that we have. May you have a blessed Eid!",
+    "Eid is a time to be thankful, so let's give thanks to Allah for all His blessings."
 ];
-const selectedQuotation = ref(quotes[0]);
+
+const eidUlAdhaQuotes = [
+    "Eid ul Adha Mubarak! May your day be filled with peace, joy, and happiness.",
+    "May the blessings of Eid ul Adha fill your life with love, compassion, and generosity.",
+    "Eid ul Adha is a time to celebrate the sacrifice of Prophet Ibrahim. May your sacrifice be accepted by Allah.",
+    "May the spirit of Eid ul Adha fill your heart with love and compassion for all living beings.",
+    "Eid ul Adha is a time to come together as a community and celebrate our faith. May you have a joyous Eid!",
+    "May the light of Eid ul Adha guide you on the path of righteousness.",
+    "Eid ul Adha is a time to forgive and forget. May you have a peaceful and joyous Eid!",
+    "Eid ul Adha is a time to share and care. May you have a happy and prosperous Eid!",
+    "Eid ul Adha Mubarak! May your day be filled with laughter and smiles.",
+    "Eid ul Adha is a time to be grateful for all that we have. May you have a blessed Eid!"
+]
+
+
+const currentQuotation = ref(eidUlFitarQuotes)
+
+const selectedQuotation = ref(currentQuotation.value[0]);
 const selectQuotation = (quotation) => selectedQuotation.value = quotation;
 
 const selectedColor = ref(palettes[0]);
@@ -136,7 +154,7 @@ const saveCardAsImage = () => {
     html2canvas(cardPreview).then(canvas => {
         const image = canvas.toDataURL('image/png');
         const link = document.createElement('a');
-        link.download = 'eid-card.png';
+        link.download = "Eid Mubarak " +  toName.value ;
         link.href = image;
         link.click();
         showBranding.value = true
@@ -271,10 +289,16 @@ const openImage = () => {
                     </div>
                     <div class="quotation-picker">
                         <h3 class="quotation-picker__title">Quotations</h3>
+                        <div class="eids-buttons">
+                            <button @click="currentQuotation = eidUlFitarQuotes"
+                                :class="{ currentEid: currentQuotation.length == 11 }">Eid Ul Fitar</button>
+                            <button :class="{ currentEid: currentQuotation.length == 10 }"
+                                @click="currentQuotation = eidUlAdhaQuotes">Eid Ul Adha</button>
+                        </div>
                         <p>Click to choose.</p>
                         <div class="quotation-items">
                             <ul>
-                                <li v-for="quotation in quotes" :key="quotation" class="quotation-item"
+                                <li v-for="quotation in currentQuotation" :key="quotation" class="quotation-item"
                                     :class="{ selected: quotation === selectedQuotation }"
                                     @click="selectQuotation(quotation)">
                                     {{
@@ -403,6 +427,7 @@ const openImage = () => {
     flex-direction: column;
     padding: 2rem;
 }
+
 .color-picker {
     display: flex;
     flex-direction: column;
@@ -444,6 +469,26 @@ const openImage = () => {
     border-radius: 5px;
     padding: 20px;
     margin: 20px 0;
+
+    .eids-buttons {
+        button {
+            outline: none;
+            border: none;
+            padding: 0.6rem;
+            font-size: 1rem;
+            margin: 1rem;
+            width: 150px;
+            cursor: pointer;
+            font-family: 'Poppins', 'Helvetica Neue', serif;
+            border-radius: 4px;
+            border: 1px solid #1e88e5;
+
+            &.currentEid{
+                background: #1e88e5;
+                color: white;
+            }
+        }
+    }
 }
 
 .quotation-picker__title {
