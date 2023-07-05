@@ -16,6 +16,7 @@
 <script setup>
 import t1 from '@/assets/template/Taj-Mahal-Design.png'
 import t2 from '@/assets/template/Masjid-Design.png'
+import t3 from '@/assets/template/moon-and-mosque-design.png'
 
 // Sample card templates
 const templates = [
@@ -31,7 +32,12 @@ const templates = [
         image: t2,
         link: 'simple-masjid-design'
     },
-    // Add more templates as needed
+    {
+        id: 3,
+        name: 'Template 3',
+        image: t3,
+        link: 'moon-and-mosque-design'
+    },
 ];
 
 
