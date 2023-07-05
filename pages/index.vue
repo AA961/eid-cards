@@ -1,13 +1,16 @@
 <template>
-    <div class="landing-page">
-        <h1>Welcome to Eid Cards!</h1>
-        <p>Choose a template below and customize your Eid cards.</p>
-
-        <div class="card-templates">
-            <NuxtLink :to="template.link" v-for="template in templates" :key="template.id" class="card-template">
-                <img :src="template.image" :alt="template.name" />
-                <button @click="editCard(template)">Edit Card</button>
-            </NuxtLink>
+    <div class="container">
+        <div class="landing-page">
+            <h1>Welcome to Eid Cards!</h1>
+            <p>Choose a template below and customize your Eid cards.</p>
+    
+            <div class="card-templates">
+                <NuxtLink :to="template.link" v-for="template in templates" :key="template.id" class="card-template">
+                    <img :src="template.image" :alt="template.name" />
+                    <button @click="editCard(template)">Edit Card</button>
+                </NuxtLink>
+            </div>
+    
         </div>
 
     </div>
@@ -60,7 +63,7 @@ $background-color: #f1f1f1;
     padding: 20px;
     text-align: center;
     background-color: $background-color;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

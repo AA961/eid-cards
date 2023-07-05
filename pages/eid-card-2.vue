@@ -76,7 +76,7 @@ const saveCardAsImage = () => {
     });
 }
 </script>
-<style scoped>
+<style scoped >
 .card-designer {
     display: flex;
     justify-content: center;
