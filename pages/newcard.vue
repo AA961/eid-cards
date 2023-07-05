@@ -8,7 +8,7 @@ let visibleCardOnly = ref(false)
 
 let toName = ref("[Name]");
 let fromName = ref("[Your Name]");
-let cardHeading = ref("Have A Blessed Eid!");
+let cardHeading = ref("Eid Mubarak To You!");
 
 
 if (route.query.to && route.query.from) {
@@ -134,8 +134,6 @@ const currentQuotation = ref(eidUlFitarQuotes)
 const selectedQuotation = ref(currentQuotation.value[0]);
 const selectQuotation = (quotation) => selectedQuotation.value = quotation;
 
-const selectedColor = ref(palettes[0]);
-const selectColor = (color) => selectedColor.value = color;
 
 function createYourCard() {
     fromName.value = toName.value
@@ -146,19 +144,16 @@ function createYourCard() {
 }
 
 const saveCardAsImage = () => {
-    //  showBranding.value = false
     const branding = document.querySelector('.branding');
     branding.classList.remove("hide")
 
-    const cardPreview = document.querySelector('.card-container');
+    const cardPreview = document.querySelector('.card-wrapper');
     html2canvas(cardPreview).then(canvas => {
         const image = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.download = "Eid Mubarak " + toName.value;
         link.href = image;
         link.click();
-        // showBranding.value = true
-
     });
 
     branding.classList.add("hide")
@@ -200,7 +195,7 @@ const openImage = () => {
         <div class="container">
             <h2 class="preview-heading" v-show="!visibleCardOnly">Card Preview</h2>
             <div class="card-wrapper">
-                <div class="card-container" :style="{ backgroundColor: selectedColor.bg }">
+                <div class="card-container">
                     <div class="left-side">
 
                         <div class="edit-to-name">
@@ -208,7 +203,7 @@ const openImage = () => {
                                 <input type="text" v-model="toName">
                                 <button @click="edit.isEditToName = !edit.isEditToName">Save</button>
                             </div>
-                            <h3 v-else class="to" :style="{ color: selectedColor.primary }"
+                            <h3 v-else class="to" :style="{ color: '#305743' }"
                                 @click="edit.isEditToName = !edit.isEditToName">To {{ toName }} </h3>
                         </div>
 
@@ -219,7 +214,7 @@ const openImage = () => {
                                 <button @click="edit.isEditCardHeading = !edit.isEditCardHeading">Save</button>
                             </div>
 
-                            <h1 :style="{ color: selectedColor.secondary }" v-else
+                            <h1 :style="{ color: '#305743' }" v-else
                                 @click="edit.isEditCardHeading = !edit.isEditCardHeading">{{ cardHeading }}</h1>
                         </div>
 
@@ -229,8 +224,8 @@ const openImage = () => {
                                 <textarea name="" id="" cols="30" rows="3" v-model="selectedQuotation"></textarea>
                                 <button @click="edit.isEditQoute = !edit.isEditQoute">Save</button>
                             </div>
-                            <p :style="{ color: selectedColor.primary }" v-else
-                                @click="edit.isEditQoute = !edit.isEditQoute"> {{ selectedQuotation }}</p>
+                            <p :style="{ color: '#305743' }" v-else @click="edit.isEditQoute = !edit.isEditQoute"> {{
+                                selectedQuotation }}</p>
                         </div>
 
                         <div class="edit-from">
@@ -238,16 +233,16 @@ const openImage = () => {
                                 <input type="text" v-model="fromName">
                                 <button @click="edit.isEditFromName = !edit.isEditFromName">Save</button>
                             </div>
-                            <h3 class="from" :style="{ color: selectedColor.primary }" v-else
+                            <h3 class="from" :style="{ color: '#305743' }" v-else
                                 @click="edit.isEditFromName = !edit.isEditFromName">From {{ fromName }}
                             </h3>
                         </div>
                     </div>
                     <div class="img">
-                        <img src="@/assets/imgs/taj-mahal.png" alt="">
+                        <!-- <img src="@/assets/imgs/mosque.png" alt=""> -->
                     </div>
 
-                    <div class="branding hide" :style="{ color: selectedColor.accent }">
+                    <div class="branding" :style="{ color: 'white' }">
                         <h4>eidcards.netlify.app</h4>
                     </div>
                 </div>
@@ -279,14 +274,6 @@ const openImage = () => {
                             <input type="text" id="fromName" v-model="fromName" class="input-field">
                         </div>
                     </div>
-
-                    <div class="color-picker">
-                        <h3 class="color-picker__title">Color Palette</h3>
-                        <div class="color-swatches">
-                            <div v-for="color in palettes" :key="color" class="color-swatch"
-                                :style="{ backgroundColor: color.bg }" @click="selectColor(color)"></div>
-                        </div>
-                    </div>
                     <div class="quotation-picker">
                         <h3 class="quotation-picker__title">Quotations</h3>
                         <div class="eids-buttons">
@@ -316,6 +303,8 @@ const openImage = () => {
 
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Oswald:wght@300&display=swap');
+
 .hide {
     display: none;
 }
@@ -325,7 +314,6 @@ const openImage = () => {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    overflow: scroll;
 
     .preview-heading {
         margin: 2rem auto;
@@ -336,11 +324,18 @@ const openImage = () => {
 
     .card-wrapper {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        justify-content: flex-end;
         height: 500px;
-        width: 750px;
+        width: 665px;
+        // border-radius: 10px;
+        // box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+
         position: relative;
         margin: 0rem auto;
+        background-color: #f7d0c4;
+        // padding-bottom: 1rem;
 
         h2 {
             text-align: center;
@@ -348,39 +343,47 @@ const openImage = () => {
         }
 
         .card-container {
-            background-color: #f5f5f5;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 1.3rem 2.5rem;
+            width: 124%;
             flex-wrap: nowrap;
             position: relative;
             height: 100%;
+            background: url("/_nuxt/assets/imgs/mosque.png");
+            background-repeat: repeat;
+            background-size: auto;
+            background-size: cover;
+            background-repeat: no-repeat;
+            transform: translateX(-67px) translateY(0px);
 
 
             .left-side {
 
 
                 .to {
-                    font-family: 'Great Vibes', cursive;
-                    font-size: 2rem;
+                    font-family: 'Oswald', sans-serif;
+                    font-size: 1rem;
                     margin: 2rem auto;
+                    color: #305743;
                 }
 
                 h1 {
-                    font-size: 3rem;
-                    font-family: 'Lobster Two', cursive;
+                    font-size: 2rem;
+                    font-family: 'Berkshire Swash', cursive;
                 }
 
                 .from {
-                    font-family: 'Lobster Two', cursive;
-                    text-align: end;
+                    font-family: 'Oswald', sans-serif;
+                    text-align: center;
+                    font-size: 0.8rem;
                 }
 
                 .qutation {
-                    font-family: 'Great Vibes', cursive !important;
-                    font-size: 1.6rem;
+                    font-family: 'Oswald', sans-serif;
+                    font-size: 1rem;
                     margin: 2rem auto;
+                    width: 300px;
                 }
             }
 
@@ -392,7 +395,7 @@ const openImage = () => {
 
             .branding {
                 position: absolute;
-                right: 10px;
+                right: 100px;
                 bottom: 10px;
                 font-size: 10px;
             }
