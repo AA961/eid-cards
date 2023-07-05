@@ -27,14 +27,14 @@ const sendWhatsappMessage = (message) => {
     window.open(whatsappUrl);
 };
 
-useSeoMeta(() => ({
-    title: 'Eid Card Designer | Create Beautiful Greeting Cards for Eid',
-    description: 'Celebrate the joyous occasion of Eid with beautiful and personalized greeting cards. Choose from a variety of stunning templates to create your own unique design. Send your heartfelt wishes to loved ones near and far with Eid Card Designer.',
-    ogTitle: 'Eid Card Designer | Create Beautiful Greeting Cards for Eid',
-    ogDescription: 'Celebrate the joyous occasion of Eid with beautiful and personalized greeting cards. Choose from a variety of stunning templates to create your own unique design. Send your heartfelt wishes to loved ones near and far with Eid Card Designer.',
-    //   ogImage: 'https://example.com/images/og-image.jpg',
-    //   twitterCard: 'summary_large_image'
-}));
+// useSeoMeta(() => ({
+//     title: 'Eid Card Designer | Create Beautiful Greeting Cards for Eid',
+//     description: 'Celebrate the joyous occasion of Eid with beautiful and personalized greeting cards. Choose from a variety of stunning templates to create your own unique design. Send your heartfelt wishes to loved ones near and far with Eid Card Designer.',
+//     ogTitle: 'Eid Card Designer | Create Beautiful Greeting Cards for Eid',
+//     ogDescription: 'Celebrate the joyous occasion of Eid with beautiful and personalized greeting cards. Choose from a variety of stunning templates to create your own unique design. Send your heartfelt wishes to loved ones near and far with Eid Card Designer.',
+//     //   ogImage: 'https://example.com/images/og-image.jpg',
+//     //   twitterCard: 'summary_large_image'
+// }));
 
 useHead({
     meta: [
