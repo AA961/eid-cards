@@ -350,7 +350,7 @@ const openImage = () => {
             flex-wrap: nowrap;
             position: relative;
             height: 100%;
-            background: url("/_nuxt/assets/imgs/mosque.png");
+            background: url("@/assets/imgs/mosque.png");
             background-repeat: repeat;
             background-size: auto;
             background-size: cover;
